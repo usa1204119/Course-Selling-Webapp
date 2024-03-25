@@ -13,7 +13,7 @@ SECRET_KEY = '=2p*9*t+lhv1^9^k*ww#rdw3((*2w44=me=f&!3$47)y%*yj3d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
