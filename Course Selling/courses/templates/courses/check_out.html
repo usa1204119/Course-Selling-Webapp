@@ -1,0 +1,86 @@
+{% extends 'courses/base.html' %}
+{% load course_custom_tags %}
+{% block title %}
+Checkout
+{% endblock %}
+
+{% block content %}
+<style>
+ .container{
+    margin-top: 100px;
+ }
+ .price{
+    padding: 0;
+    color: greenyellow;
+ }
+ .card-text{
+    color: red;
+    padding-bottom: 5px;
+ }
+ 
+</style>
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col mr-auto">
+            <div class="card ml-auto" style="width: 18rem; background-color: #343a40; color: white;">
+                <img class="card-img-top" src="{{ course.thumbnail.url }}" alt="Course image cap">
+                <div class="card-body">
+                    <h5 class="card-title"><b>{{ course.name }}</b></h5>
+                    <p class="card-text m-0 p-0">
+                        Save {{ course.discount }}%
+                        <br>
+                        <span class="price">
+                            <del>{{ course.price|rupee }}</del>
+                            &nbsp;
+                            <span>{% cal_sellprice course.price course.discount as value %} {{ value|rupee }}</span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div>
+                <p class="display-5" style="color: white;">{{ course.name }}</p>
+                <hr style="background-color: rgb(229, 228, 233);">
+                <p class="display-5" style="color: white;">Payable Amount: <b>{% cal_sellprice course.price course.discount as value %} {{ value|rupee }}</b></p>
+                <a class="btn btn-dark border" href="?action=create_payment" style="color: rgb(245, 230, 230);background-color: blueviolet;"><b>Continue to Payment</b></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if order is not None %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    var options = {
+        "key": "rzp_test_WSDjOsbpLd615K",
+        "name": "Utkarsh Sharma",
+        "description": "Payment For {{ course.name }}",
+        "image": "https://png.pngtree.com/element_pic/00/16/07/115783931601b5c.jpg",
+        "order_id": "{{ order.id }}",
+        "callback_url": "http://localhost:8000/verify_payment",
+        "prefill": {
+            "name": "{{ user.first_name }}",
+            "email": "{{ user.email }}",
+        },
+        "theme": {
+            "color": 'red',
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+</script>
+{% endif %}
+
+{% if error is not None %}
+<script>
+    window.onload = () => {
+        alert("{{ error }}")
+    }
+</script>
+{% endif %}
+{% endblock %}

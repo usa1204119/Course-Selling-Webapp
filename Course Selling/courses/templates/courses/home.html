@@ -1,0 +1,214 @@
+{% extends 'courses/base.html' %}
+{% load course_custom_tags %}
+{% block title %}Courses{% endblock %}
+
+{% block content %}
+<style>
+    
+    .course-card {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        border-color: rgba(75, 44, 201, 0.79);
+        box-shadow: 0 4px 6px rgba(54, 14, 146, 0.1);
+        overflow: hidden;
+        
+        transition: transform 0.3s ease;
+        height: 100%; /* Ensure all cards have the same height */
+        
+    }
+
+    .course-card:hover {
+        transform: translateY(-5px); /* Lift the card on hover */
+    }
+
+    .course-image {
+        width: 100%;
+        height: 200px; /* Set a fixed height for the course images */
+
+        border-radius: 10px 10px 0 0; /* Rounded corners only at the top */
+    }
+
+    .course-details {
+        padding: 15px;
+    }
+
+    .course-title {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #333; /* Dark text color */
+    }
+
+    .price {
+        font-size: 18px;
+        color: #007bff; /* Primary color */
+        font-weight: bold;
+    }
+
+    .discount {
+        color: #28a745; /* Success color */
+        font-weight: bold;
+    }
+
+    .btn-enroll,
+    .btn-show-more {
+        border-radius: 0; /* Remove rounded corners from buttons */
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-enroll {
+        background-color: #6200ff; /* Primary color */
+        color: #fff;
+    }
+
+    .btn-enroll:hover {
+        background-color:  #9A616D; /* Darker shade of primary color */
+    }
+
+    .btn-show-more {
+        background-color: #1a0326; /* Secondary color */
+        color: #fff;
+    }
+
+    .btn-show-more:hover {
+        background-color: #9A616D; /* Darker shade of secondary color */
+    }
+
+    .jumbotron {
+        background-color: rgba(75, 44, 201, 0.79); /* Jumbotron background color */
+        color: #fff; /* Jumbotron text color */
+        padding: 10px 20px; /* Jumbotron padding */
+        margin-bottom: 40px;
+        border-radius: 10px;
+    }
+
+    .jumbotron h1 {
+        font-size: 48px; /* Jumbotron heading font size */
+        font-weight: bold;
+    }
+
+    .jumbotron p {
+        font-size: 18px; /* Jumbotron paragraph font size */
+    }
+
+    .jumbotron a {
+        color: #fff; /* Jumbotron link color */
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .jumbotron a:hover {
+        text-decoration: underline; /* Underline link on hover */
+    }
+    .card-footer{
+        padding: 0;
+        
+    }
+    .col-md-4{
+        padding-bottom: 30px;
+        padding-right: 30px;
+        padding-top: 30px;
+    }
+    .card-body.course-details{
+        padding-bottom: 0;
+    }
+    /* Define animation keyframes */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Apply animation to the jumbotron */
+    .jumbotron {
+        animation: slideIn 1s ease forwards;
+    }
+    .jumbotron{
+        
+        padding: 100px;
+    }
+    .jumbotron  p{
+       
+        padding: 10px;
+    }
+    /* Define the slide-up animation */
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apply animation to each course card */
+.card.course-card {
+    animation: slideUp 0.5s ease forwards;
+}
+
+/* Delay each card's animation */
+.card.course-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+.card.course-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+.card.course-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+/* Add more nth-child selectors for additional cards */
+
+</style>
+
+<div class="jumbotron text-center">
+    <h1>Curiosity is the key to learning</h1>
+    <p>Without curiosity we all are walking dead... </p>
+    
+</div>
+
+<div class="container">
+    <div class="row">
+        {% for course in courses %}
+        <div class="col-md-4">
+            <div class="card course-card">
+                <img class="card-img-top course-image" src="{{ course.thumbnail.url }}" alt="Course Image">
+                <div class="card-body course-details">
+                    <h5 class="card-title course-title"><b>{{ course.name }}</b></h5>
+                    <p class="card-text">
+                        <span class="discount">Save {{ course.discount }}%</span><br>
+                        <span class="price">
+                            <del>{{ course.price|rupee }}</del> &nbsp;
+                            {% cal_sellprice course.price course.discount as discounted_price %}
+                            {{ discounted_price|rupee }}
+                        </span>
+                    </p>
+                </div>
+                <div class="card-footer">
+                    {% is_enrolled request course as enrolled %}
+                    <div class="row no-gutters">
+                        {% if enrolled %}
+                        <div class="col">
+                            <a href="/course/{{ course.slug }}" class="btn btn-enroll btn-block">Start Course</a>
+                        </div>
+                        {% else %}
+                        <div class="col">
+                            <a href="/check-out/{{ course.slug }}" class="btn btn-enroll btn-block">Enroll Now</a>
+                        </div>
+                        <div class="col">
+                            <a href="/course/{{ course.slug }}" class="btn btn-show-more btn-block">Show More</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

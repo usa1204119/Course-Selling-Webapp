@@ -1,0 +1,146 @@
+{% extends 'courses/base.html' %}
+{% load course_custom_tags %}
+{%block title%}
+Your Courses
+{% endblock %}
+
+{%block content%}
+<style>
+    
+    .jumbotron {
+        background-color: #9A616D; /* Jumbotron background color */
+        color: #fff; /* Jumbotron text color */
+        padding: 30px ; /* Jumbotron padding */
+        margin-bottom: 40px;
+        border-radius: 10px;
+    }
+
+    .jumbotron h1 {
+        font-size: 48px; /* Jumbotron heading font size */
+        font-weight: bold;
+    }
+
+    .jumbotron p {
+        font-size: 18px; /* Jumbotron paragraph font size */
+    }
+
+    .jumbotron a {
+        color: #fff; /* Jumbotron link color */
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .jumbotron a:hover {
+        text-decoration: underline; /* Underline link on hover */
+    }
+    .card-footer{
+        padding: 0;
+        
+    }
+    .col-md-4{
+        padding-bottom: 30px;
+        
+        padding-top: 30px;
+    }
+    .card-body.course-details{
+        padding-bottom: 0;
+    }
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Apply animation to the jumbotron */
+    .jumbotron {
+        animation: slideIn 1s ease forwards;
+    }
+    .btn{
+        background-color: #9A616D;
+        border-radius: 10px;
+        }
+    
+    .card{
+        border-radius: 10px;
+    }
+    .card-img-top{
+        border-radius: 10px;
+        width: 100%;
+        height: 210px;
+       
+        
+    }
+   
+    .card-body{
+        padding-top: 20px;
+        padding-bottom: 10px;
+        
+    }
+    /* Define the slide-left animation */
+@keyframes slideLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Apply animation to each user course card */
+.card {
+    animation: slideLeft 0.5s ease forwards;
+}
+
+/* Delay each card's animation */
+.card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+.card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+.card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+/* Add more nth-child selectors for additional cards */
+
+    
+</style>
+<div class="jumbotron text-center animate__animated animate__slideInDown">
+    <h1>Your Courses</h1>
+</div>
+
+   <div class="row" style="padding: 0,10;">
+      {% for uc in user_courses %}
+      <div class="col mx-auto" style="padding: 30px;">
+          <div class="card mx-auto" style="width: 25rem;border-radius: 50;">
+              <img class="card-img-top" src="{{uc.course.thumbnail.url}}" alt="Card image cap ">
+              <div class="card-body" ">
+                  <h5 class="card-title"><b>{{uc.course.name}}</b></h5>
+                  
+              </div>
+
+              <div class="card-footer p-0">
+                  
+                  <div class="row no-gutters">
+                      
+                      <div class="col border-right">
+                          <a href="/course/{{uc.course.slug}}" class="btn btn-dark btn-block" style="color: #ffffff;"><b>Start Course</b></a>
+                      </div>
+                     
+                  </div>
+
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
+</div>
+
+{%endblock%}
